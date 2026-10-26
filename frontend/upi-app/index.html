@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Pay (simulated UPI)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Demo Pay</h1>
+    <p class="note">Simulated UPI app for a college project. Not real money.</p>
+    <p>Balance: <strong id="balance">...</strong></p>
+  </header>
+
+  <nav>
+    <button id="tab-send" class="active">Send money</button>
+    <button id="tab-history">History</button>
+  </nav>
+
+  <main>
+    <section id="send-view">
+      <form id="pay-form">
+        <label for="receiver">Send to</label>
+        <select id="receiver"></select>
+        <label for="amount">Amount (Rs.)</label>
+        <input id="amount" type="number" min="1" step="1" placeholder="1000">
+        <p id="form-error" class="error" hidden></p>
+        <button id="pay-btn" type="submit">Pay</button>
+      </form>
+
+      <div id="status-card" hidden>
+        <h2 id="status-title"></h2>
+        <p id="status-message"></p>
+        <div id="status-banner" class="banner" hidden></div>
+        <h3>Progress</h3>
+        <ol id="timeline"></ol>
+      </div>
+    </section>
+
+    <section id="history-view" hidden>
+      <ul id="history-list"></ul>
+    </section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="logic.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

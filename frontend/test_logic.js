@@ -1,0 +1,15 @@
+const assert = require("assert");
+const L = require("./upi-app/logic.js");
+assert.strictEqual(L.isFinal("COMPLETED"), true);
+assert.strictEqual(L.isFinal("TIMEOUT"), false);
+assert.strictEqual(L.isFinal("RECONCILIATION_REQUIRED"), true);
+assert.strictEqual(L.isStuck("TIMEOUT"), true);
+assert.strictEqual(L.isStuck("COMPLETED"), false);
+assert.strictEqual(L.describeState("COMPLETED").tone, "ok");
+assert.strictEqual(L.describeState("SOMETHING_NEW").title, "Payment in progress");
+assert.notStrictEqual(L.makeKey(), L.makeKey());
+assert.strictEqual(L.validateAmount("0") !== null, true);
+assert.strictEqual(L.validateAmount("") !== null, true);
+assert.strictEqual(L.validateAmount("500"), null);
+assert.strictEqual(L.formatMoney(1500), "Rs. 1,500");
+console.log("logic.js: all assertions passed");

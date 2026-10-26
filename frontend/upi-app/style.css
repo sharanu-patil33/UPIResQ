@@ -1,0 +1,21 @@
+* { box-sizing: border-box; }
+body { font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 16px; color: #1a1a1a; background: #f6f8fc; }
+header h1 { margin: 0; color: #1F3864; }
+.note { color: #666; font-size: 13px; margin: 2px 0 8px; }
+nav { display: flex; gap: 8px; margin: 12px 0; }
+nav button { flex: 1; padding: 10px; border: 1px solid #4472C4; background: #fff; color: #4472C4; border-radius: 6px; cursor: pointer; }
+nav button.active { background: #4472C4; color: #fff; }
+form, #status-card, #history-list { background: #fff; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+label { display: block; margin: 10px 0 4px; font-size: 14px; }
+select, input { width: 100%; padding: 10px; font-size: 16px; border: 1px solid #bbb; border-radius: 6px; }
+#pay-btn { width: 100%; margin-top: 14px; padding: 12px; font-size: 16px; background: #2E7D5B; color: #fff; border: 0; border-radius: 6px; cursor: pointer; }
+#pay-btn:disabled { background: #999; cursor: not-allowed; }
+.error { color: #b00020; font-size: 14px; }
+#status-card { margin-top: 16px; }
+.ok { color: #2E7D5B; } .bad { color: #b00020; } .warn { color: #b26a00; } .info { color: #1F3864; }
+.banner { border-left: 5px solid #b26a00; background: #fff4e0; padding: 10px 12px; border-radius: 4px; margin: 10px 0; font-size: 14px; }
+.banner.severe { border-color: #b00020; background: #fdeaea; }
+#timeline { padding-left: 20px; font-size: 14px; }
+#history-list { list-style: none; margin: 0; }
+#history-list li { padding: 10px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-size: 14px; }
+#history-list li:last-child { border-bottom: 0; }

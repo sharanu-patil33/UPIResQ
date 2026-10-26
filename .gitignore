@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+.env
+*.db
+node_modules/
+package-lock.json
+catboost_info/
+fraud-intel/fraud_model.cbm
+fraud-intel/data/*.csv
+.DS_Store
