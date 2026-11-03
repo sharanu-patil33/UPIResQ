@@ -1,26 +1,26 @@
 """Backend reference tests. Run from backend/:   python -m pytest tests/ -v"""
-import os
 import threading
-
-os.environ["DATABASE_URL"] = "sqlite:///./test_upi.db"
-if os.path.exists("test_upi.db"):
-    os.remove("test_upi.db")
+import uuid
 
 import pytest
+from sqlalchemy.exc import IntegrityError
 
-from app.db import Base, engine, SessionLocal
-from app.models import Account, Transaction, TransactionEvent
+from app.db import SessionLocal
+from app.models import Customer, Account, Transaction, TransactionEvent
 from app import simulators
 from app.service import create_transaction, process_payment, transition
-
-Base.metadata.create_all(engine)
 
 
 @pytest.fixture(scope="module")
 def accounts():
     db = SessionLocal()
-    a, b = Account(balance=5000), Account(balance=0)
-    db.add_all([a, b]); db.commit()
+    owner = Customer(name="Test Owner", email=f"{uuid.uuid4()}@example.com", avg_txn_amount=1000)
+    db.add(owner)
+    db.commit()
+    a = Account(customer_id=owner.id, account_number=str(uuid.uuid4()), balance=5000)
+    b = Account(customer_id=owner.id, account_number=str(uuid.uuid4()), balance=0)
+    db.add_all([a, b])
+    db.commit()
     ids = (a.id, b.id)
     db.close()
     return ids
@@ -70,6 +70,13 @@ def test_same_key_different_details_rejected(accounts):
     run(accounts, "k8", amount=100)
     with pytest.raises(ValueError):
         run(accounts, "k8", amount=200)
+
+
+def test_unknown_receiver_is_rejected_by_the_database(accounts):
+    db = SessionLocal()
+    with pytest.raises(IntegrityError):
+        create_transaction(db, "bad-receiver", accounts[0], "no-such-account", 100)
+    db.close()
 
 
 def test_illegal_transition_rejected(accounts):
