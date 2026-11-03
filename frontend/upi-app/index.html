@@ -2,49 +2,1274 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Demo Pay (simulated UPI)</title>
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="theme-color"
+    content="#080a12"
+  >
+
+  <title>MiniPay</title>
+
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <header>
-    <h1>Demo Pay</h1>
-    <p class="note">Simulated UPI app for a college project. Not real money.</p>
-    <p>Balance: <strong id="balance">...</strong></p>
-  </header>
 
-  <nav>
-    <button id="tab-send" class="active">Send money</button>
-    <button id="tab-history">History</button>
-  </nav>
+  <!-- =====================================================
+       AUTHENTICATION
+       ===================================================== -->
 
-  <main>
-    <section id="send-view">
-      <form id="pay-form">
-        <label for="receiver">Send to</label>
-        <select id="receiver"></select>
-        <label for="amount">Amount (Rs.)</label>
-        <input id="amount" type="number" min="1" step="1" placeholder="1000">
-        <p id="form-error" class="error" hidden></p>
-        <button id="pay-btn" type="submit">Pay</button>
+  <div id="auth-screen" class="auth-screen">
+
+    <!-- LOGIN -->
+    <section id="login-view" class="auth-card">
+
+      <div class="auth-heading">
+
+        <div class="auth-kicker">
+          MINIPAY
+        </div>
+
+        <h1>
+          Welcome to MiniPay
+        </h1>
+
+        <p>
+          Sign in to continue to your account.
+        </p>
+
+      </div>
+
+
+      <form id="login-form">
+
+        <div class="input-group">
+
+          <label for="login-email">
+            Email address
+          </label>
+
+          <input
+            id="login-email"
+            type="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+          >
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label for="login-password">
+            Password
+          </label>
+
+          <input
+            id="login-password"
+            type="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
+          >
+
+        </div>
+
+
+        <p
+          id="login-error"
+          class="form-error"
+          hidden
+        ></p>
+
+
+        <button
+          id="login-btn"
+          class="primary-btn auth-submit"
+          type="submit"
+        >
+          Sign in
+        </button>
+
       </form>
 
-      <div id="status-card" hidden>
-        <h2 id="status-title"></h2>
-        <p id="status-message"></p>
-        <div id="status-banner" class="banner" hidden></div>
-        <h3>Progress</h3>
-        <ol id="timeline"></ol>
+
+      <div class="auth-switch">
+
+        <span>
+          Don't have an account?
+        </span>
+
+        <button
+          id="show-register"
+          class="text-btn"
+          type="button"
+        >
+          Create account
+        </button>
+
       </div>
+
     </section>
 
-    <section id="history-view" hidden>
-      <ul id="history-list"></ul>
+
+    <!-- REGISTER -->
+    <section
+      id="register-view"
+      class="auth-card"
+      hidden
+    >
+
+      <div class="auth-heading">
+
+        <div class="auth-kicker">
+          MINIPAY
+        </div>
+
+        <h1>
+          Create your account
+        </h1>
+
+        <p>
+          Set up your MiniPay account in a few seconds.
+        </p>
+
+      </div>
+
+
+      <form id="register-form">
+
+        <div class="input-group">
+
+          <label for="register-name">
+            Full name
+          </label>
+
+          <input
+            id="register-name"
+            type="text"
+            placeholder="Your full name"
+            autocomplete="name"
+            required
+          >
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label for="register-phone">
+            Phone number
+          </label>
+
+          <input
+            id="register-phone"
+            type="tel"
+            placeholder="10-digit mobile number"
+            autocomplete="tel"
+            required
+          >
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label for="register-email">
+            Email address
+          </label>
+
+          <input
+            id="register-email"
+            type="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            required
+          >
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label for="register-password">
+            Password
+          </label>
+
+          <input
+            id="register-password"
+            type="password"
+            placeholder="Create a password"
+            autocomplete="new-password"
+            required
+          >
+
+        </div>
+
+
+        <p
+          id="register-error"
+          class="form-error"
+          hidden
+        ></p>
+
+
+        <button
+          id="register-btn"
+          class="primary-btn auth-submit"
+          type="submit"
+        >
+          Create account
+        </button>
+
+      </form>
+
+
+      <div class="auth-switch">
+
+        <span>
+          Already have an account?
+        </span>
+
+        <button
+          id="show-login"
+          class="text-btn"
+          type="button"
+        >
+          Sign in
+        </button>
+
+      </div>
+
     </section>
-  </main>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       MAIN APPLICATION
+       Hidden until the user signs in.
+       ===================================================== -->
+
+  <div
+    id="app-view"
+    class="app-shell"
+    hidden
+  >
+
+
+    <!-- ===================================================
+         SIDEBAR
+         =================================================== -->
+
+    <aside class="sidebar">
+
+      <div class="sidebar-brand">
+
+        <div class="brand-symbol">
+          M
+        </div>
+
+        <div>
+          <strong>
+            MiniPay
+          </strong>
+
+          <span>
+            Payments & security
+          </span>
+        </div>
+
+      </div>
+
+
+      <nav class="sidebar-nav">
+
+        <button
+          id="tab-dashboard"
+          class="nav-item active"
+          type="button"
+          data-view="dashboard"
+        >
+
+          <span class="nav-icon">
+            ◈
+          </span>
+
+          <span>
+            Dashboard
+          </span>
+
+        </button>
+
+
+        <button
+          id="tab-send"
+          class="nav-item"
+          type="button"
+          data-view="send"
+        >
+
+          <span class="nav-icon">
+            ↑
+          </span>
+
+          <span>
+            Send money
+          </span>
+
+        </button>
+
+
+        <button
+          id="tab-history"
+          class="nav-item"
+          type="button"
+          data-view="history"
+        >
+
+          <span class="nav-icon">
+            ≡
+          </span>
+
+          <span>
+            History
+          </span>
+
+        </button>
+
+
+        <button
+          id="tab-security"
+          class="nav-item"
+          type="button"
+          data-view="security"
+        >
+
+          <span class="nav-icon">
+            ◉
+          </span>
+
+          <span>
+            Security
+          </span>
+
+        </button>
+
+
+        <button
+          id="tab-profile"
+          class="nav-item"
+          type="button"
+          data-view="profile"
+        >
+
+          <span class="nav-icon">
+            ○
+          </span>
+
+          <span>
+            Profile
+          </span>
+
+        </button>
+
+      </nav>
+
+
+      <div class="sidebar-bottom">
+
+        <div class="sidebar-user">
+
+          <div
+            id="sidebar-avatar"
+            class="avatar"
+          >
+            ?
+          </div>
+
+          <div class="sidebar-user-info">
+
+            <strong id="sidebar-user-name">
+              User
+            </strong>
+
+            <span id="sidebar-user-email">
+              user@example.com
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <button
+          id="logout-btn"
+          class="signout-btn"
+          type="button"
+        >
+          Sign out
+        </button>
+
+      </div>
+
+    </aside>
+
+
+
+    <!-- ===================================================
+         MAIN CONTENT
+         =================================================== -->
+
+    <main class="main-content">
+
+
+      <!-- TOP BAR -->
+
+      <header class="topbar">
+
+        <div class="mobile-brand">
+
+          <strong>
+            MiniPay
+          </strong>
+
+        </div>
+
+
+        <div class="topbar-spacer"></div>
+
+
+        <div class="topbar-user">
+
+          <div class="topbar-user-info">
+
+            <strong id="topbar-user-name">
+              User
+            </strong>
+
+            <span id="topbar-user-email">
+              user@example.com
+            </span>
+
+          </div>
+
+
+          <div
+            id="topbar-avatar"
+            class="avatar"
+          >
+            ?
+          </div>
+
+
+          <button
+            id="topbar-logout"
+            class="logout-icon-btn"
+            type="button"
+            title="Sign out"
+          >
+            ↪
+          </button>
+
+        </div>
+
+      </header>
+
+
+
+      <!-- =================================================
+           DASHBOARD VIEW
+           ================================================= -->
+
+      <section
+        id="dashboard-view"
+        class="page-view"
+      >
+
+        <div class="page-header">
+
+          <div>
+
+            <p class="eyebrow">
+              Overview
+            </p>
+
+            <h1>
+              Good to see you.
+            </h1>
+
+            <p>
+              Here's what's happening with your account.
+            </p>
+
+          </div>
+
+
+          <button
+            id="dashboard-send-btn"
+            class="primary-btn"
+            type="button"
+          >
+            Send money
+          </button>
+
+        </div>
+
+
+        <!-- STATS -->
+
+        <div class="stats-grid">
+
+
+          <!-- BALANCE -->
+
+          <div class="balance-card">
+
+            <span class="card-label">
+              Available balance
+            </span>
+
+            <div
+              id="balance"
+              class="balance-amount"
+            >
+              Rs. 0
+            </div>
+
+            <div class="balance-meta">
+              Available for payments
+            </div>
+
+          </div>
+
+
+          <!-- TRANSACTIONS -->
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              ↗
+            </div>
+
+            <div>
+
+              <span>
+                Transactions
+              </span>
+
+              <strong id="transaction-count">
+                0
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <!-- SECURITY -->
+
+          <div class="stat-card">
+
+            <div class="stat-icon">
+              ✓
+            </div>
+
+            <div>
+
+              <span>
+                Account security
+              </span>
+
+              <strong>
+                Protected
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- RECENT TRANSACTIONS -->
+
+        <div class="content-card">
+
+          <div class="section-header">
+
+            <div>
+
+              <h2>
+                Recent transactions
+              </h2>
+
+              <p>
+                Your latest payment activity
+              </p>
+
+            </div>
+
+
+            <button
+              id="dashboard-history-btn"
+              class="text-btn"
+              type="button"
+            >
+              View all
+            </button>
+
+          </div>
+
+
+          <div id="dashboard-history">
+
+            <div class="empty-state">
+              No transactions yet.
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =================================================
+           SEND MONEY VIEW
+           ================================================= -->
+
+      <section
+        id="send-view"
+        class="page-view"
+        hidden
+      >
+
+        <div class="page-header">
+
+          <div>
+
+            <p class="eyebrow">
+              Payments
+            </p>
+
+            <h1>
+              Send money
+            </h1>
+
+            <p>
+              Make a secure payment from your account.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="payment-layout">
+
+
+          <!-- PAYMENT FORM -->
+
+          <div class="content-card payment-card">
+
+            <div class="section-header">
+
+              <div>
+
+                <h2>
+                  New payment
+                </h2>
+
+                <p>
+                  Choose a recipient and enter the amount.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <form id="pay-form">
+
+
+              <div class="input-group">
+
+                <label for="receiver">
+                  Send to
+                </label>
+
+                <select id="receiver" required>
+
+                  <option value="">
+                    Select a recipient
+                  </option>
+
+                </select>
+
+              </div>
+
+
+              <div class="input-group">
+
+                <label for="amount">
+                  Amount
+                </label>
+
+                <div class="amount-input">
+
+                  <span>
+                    ₹
+                  </span>
+
+                  <input
+                    id="amount"
+                    type="number"
+                    min="1"
+                    step="1"
+                    placeholder="0"
+                    required
+                  >
+
+                </div>
+
+              </div>
+
+
+              <div class="payment-note">
+
+                Payments are protected with transaction
+                validation and duplicate-payment prevention.
+
+              </div>
+
+
+              <p
+                id="form-error"
+                class="form-error"
+                hidden
+              ></p>
+
+
+              <button
+                id="pay-btn"
+                class="primary-btn full-width"
+                type="submit"
+              >
+                Pay now
+              </button>
+
+            </form>
+
+          </div>
+
+
+
+          <!-- PAYMENT STATUS -->
+
+          <div
+            id="status-card"
+            class="content-card status-card"
+            hidden
+          >
+
+            <div class="status-heading">
+
+              <div
+                id="status-icon"
+                class="status-check"
+              >
+                ✓
+              </div>
+
+              <div>
+
+                <h2 id="status-title">
+                  Payment completed
+                </h2>
+
+                <p id="status-message">
+                  Your payment was processed successfully.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div
+              id="status-banner"
+              class="banner"
+              hidden
+            ></div>
+
+
+            <div class="timeline-section">
+
+              <h3>
+                Payment progress
+              </h3>
+
+              <ol id="timeline"></ol>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =================================================
+           HISTORY VIEW
+           ================================================= -->
+
+      <section
+        id="history-view"
+        class="page-view"
+        hidden
+      >
+
+        <div class="page-header">
+
+          <div>
+
+            <p class="eyebrow">
+              Activity
+            </p>
+
+            <h1>
+              Transaction history
+            </h1>
+
+            <p>
+              Review your recent payments and statuses.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="content-card">
+
+          <div class="section-header">
+
+            <div>
+
+              <h2>
+                All transactions
+              </h2>
+
+              <p>
+                Complete payment activity
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div id="history-list">
+
+            <div class="empty-state">
+              No transactions found.
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =================================================
+           TRANSACTION DETAILS VIEW
+           ================================================= -->
+
+      <section
+        id="transaction-view"
+        class="page-view"
+        hidden
+      >
+
+        <div class="page-header">
+
+          <div>
+
+            <p class="eyebrow">
+              Transaction
+            </p>
+
+            <h1>
+              Payment details
+            </h1>
+
+            <p>
+              Review the complete payment status and timeline.
+            </p>
+
+          </div>
+
+
+          <button
+            id="transaction-back-btn"
+            class="secondary-btn"
+            type="button"
+          >
+            Back to history
+          </button>
+
+        </div>
+
+
+        <div
+          id="transaction-details"
+          class="content-card"
+        >
+
+          <div class="loading">
+            Loading transaction...
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =================================================
+           SECURITY VIEW
+           ================================================= -->
+
+      <section
+        id="security-view"
+        class="page-view"
+        hidden
+      >
+
+        <div class="page-header">
+
+          <div>
+
+            <p class="eyebrow">
+              Protection
+            </p>
+
+            <h1>
+              Security
+            </h1>
+
+            <p>
+              Monitor payment protection and risk activity.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="security-grid">
+
+
+          <!-- ACCOUNT SECURITY -->
+
+          <div class="content-card">
+
+            <div class="section-header">
+
+              <div>
+
+                <h2>
+                  Account protection
+                </h2>
+
+                <p>
+                  Current security status
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="security-item">
+
+              <div class="security-item-icon">
+                ✓
+              </div>
+
+              <div>
+
+                <strong>
+                  Payment validation
+                </strong>
+
+                <p>
+                  Transactions are checked before processing.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="security-item">
+
+              <div class="security-item-icon">
+                ✓
+              </div>
+
+              <div>
+
+                <strong>
+                  Duplicate protection
+                </strong>
+
+                <p>
+                  Duplicate payment requests are prevented.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="security-item">
+
+              <div class="security-item-icon">
+                ✓
+              </div>
+
+              <div>
+
+                <strong>
+                  Payment monitoring
+                </strong>
+
+                <p>
+                  Payment states are tracked throughout processing.
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+          <!-- ALERTS -->
+
+          <div class="content-card">
+
+            <div class="section-header">
+
+              <div>
+
+                <h2>
+                  Security alerts
+                </h2>
+
+                <p>
+                  Recent risk and payment alerts
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div id="alerts-list">
+
+              <div class="empty-state">
+                No security alerts.
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- FRAUD CASES -->
+
+        <div
+          class="content-card"
+          style="margin-top:18px;"
+        >
+
+          <div class="section-header">
+
+            <div>
+
+              <h2>
+                Risk cases
+              </h2>
+
+              <p>
+                Transactions requiring additional attention
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div id="cases-list">
+
+            <div class="empty-state">
+              No active cases.
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =================================================
+           PROFILE VIEW
+           ================================================= -->
+
+      <section
+        id="profile-view"
+        class="page-view"
+        hidden
+      >
+
+        <div class="page-header">
+
+          <div>
+
+            <p class="eyebrow">
+              Account
+            </p>
+
+            <h1>
+              Profile
+            </h1>
+
+            <p>
+              Manage your MiniPay account information.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="content-card profile-card">
+
+
+          <div
+            id="profile-avatar"
+            class="profile-avatar"
+          >
+            ?
+          </div>
+
+
+          <div class="profile-details">
+
+
+            <div class="profile-field">
+
+              <span>
+                Full name
+              </span>
+
+              <strong id="profile-name">
+                —
+              </strong>
+
+            </div>
+
+
+            <div class="profile-field">
+
+              <span>
+                Email address
+              </span>
+
+              <strong id="profile-email">
+                —
+              </strong>
+
+            </div>
+
+
+            <div class="profile-field">
+
+              <span>
+                Phone number
+              </span>
+
+              <strong id="profile-phone">
+                —
+              </strong>
+
+            </div>
+
+
+            <div class="profile-field">
+
+              <span>
+                Account ID
+              </span>
+
+              <strong id="profile-account">
+                —
+              </strong>
+
+            </div>
+
+
+          </div>
+
+
+          <button
+            id="profile-logout-btn"
+            class="secondary-btn"
+            type="button"
+          >
+            Sign out
+          </button>
+
+        </div>
+
+      </section>
+
+
+    </main>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       JAVASCRIPT
+       ===================================================== -->
 
   <script src="config.js"></script>
   <script src="logic.js"></script>
   <script src="app.js"></script>
+
 </body>
 </html>
